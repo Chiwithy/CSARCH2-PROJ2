@@ -15,13 +15,15 @@
                 <option value="grs">G-R-S</option>
                 <option value="rounding">Rounding</option>
             </select>
+            <br>
+            <br>
+            Bit support: <input type="text" placeholder="Number of Bits" id="bits"size="10">
         </p>
         <button onclick="addBinary()">Add Binary</button>
-
 <p>Binary operand 1: <span id="binaryOp1Display"></span></p>
 <p>Binary operand 2: <span id="binaryOp2Display"></span></p>
 <p>Rounding choice: <span id="roundChoiceDisplay"></span></p>
-
+<p>Number of Bits: <span id="bitsDisplay"></span></p>
 <script>
     function addBinary() {
         // Get the values of the user inputs
@@ -30,11 +32,13 @@
         const binaryOp2 = document.getElementById("binaryOp2").value;
         const binaryOp2B2 = document.getElementById("binaryOp2B2").value;
         const roundChoice = document.getElementById("roundChoice").value;
+         const bits = document.getElementById("bits").value;
 
         // Set the HTML content of the display elements
         document.getElementById("binaryOp1Display").innerHTML = `${binaryOp1} x 2<sup>${binaryOp1B2}</sup>`;
         document.getElementById("binaryOp2Display").innerHTML = `${binaryOp2} x 2<sup>${binaryOp2B2}</sup>`;
         document.getElementById("roundChoiceDisplay").innerHTML = roundChoice;
+        document.getElementById("bitsDisplay").innerHTML = `${bits}`;
     }
 </script>
 
