@@ -49,6 +49,13 @@ document.addEventListener ("DOMContentLoaded", function () {
         // Set HTML contents for normalized values
         document.getElementById("binaryOp1Display").innerHTML = `${normBinaryOp1} x 2<sup>${normBinaryOp1B2}</sup>`;
         document.getElementById("binaryOp2Display").innerHTML = `${normBinaryOp2} x 2<sup>${normBinaryOp2B2}</sup>`;
+
+        let [alignedBinaryOp1, alignedBinaryOp1B2, alignedBinaryOp2, alignedBinaryOp2B2] = alignBits (normBinaryOp1, normBinaryOp1B2,
+                                                                                                      normBinaryOp2, normBinaryOp2B2);
+
+        // Set HTML contents for aligned normalized values
+        document.getElementById("binaryOp1Display").innerHTML = `${alignedBinaryOp1} x 2<sup>${alignedBinaryOp1B2}</sup>`;
+        document.getElementById("binaryOp2Display").innerHTML = `${alignedBinaryOp2} x 2<sup>${alignedBinaryOp2B2}</sup>`;
     }
 
     function normalize (binaryOp, binaryOpB2) {
@@ -60,7 +67,29 @@ document.addEventListener ("DOMContentLoaded", function () {
             decimalIndex = binaryOp.indexOf (".");
             exp++;
         }
+
         return [binaryOp, exp.toString ()];
+    }
+
+    function alignBits (binaryOp1, binaryOp1B2, binaryOp2, binaryOp2B2) {
+        let exp1 = parseInt (binaryOp1B2);
+        let exp2 = parseInt (binaryOp2B2);
+        let diff = Math.abs (Math.abs (exp1) - Math.abs (exp2));
+        let i = 0;
+        let align = (exp1 < exp2) ? 1 : 2;
+        let binToAlign = (exp1 < exp2) ? binaryOp1 : binaryOp2;
+        let expToAlign = (exp1 < exp2) ? parseInt (binaryOp1B2) : parseInt (binaryOp2B2);
+        let expTarget = (exp1 < exp2) ? parseInt (binaryOp2B2) : parseInt (binaryOp1B2);
+        
+        while (expToAlign !== expTarget) {
+            binToAlign = movePointLeft (binToAlign);
+            expToAlign++;
+        }
+
+        if (align === 1)
+            return [binToAlign, expToAlign.toString (), binaryOp2, binaryOp2B2];
+        else
+            return [binaryOp1, binaryOp1B2, binToAlign, expToAlign.toString ()];
     }
 
     function movePointLeft (binaryString) {
