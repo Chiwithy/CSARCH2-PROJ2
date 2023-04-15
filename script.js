@@ -69,7 +69,7 @@ document.addEventListener ("DOMContentLoaded", function () {
         let decimalIndex = binaryOp.indexOf (".");
         let exp = parseInt (binaryOpB2);
         
-        while (decimalIndex !== 1) {
+        while (decimalIndex !== 1) {        // While binary point isnt the 2nd character in the binary string (only one whole digit)
             binaryOp = movePointLeft (binaryOp);
             decimalIndex = binaryOp.indexOf (".");
             exp++;
@@ -83,7 +83,7 @@ document.addEventListener ("DOMContentLoaded", function () {
         let exp2 = parseInt (binaryOp2B2);
         let diff = Math.abs (Math.abs (exp1) - Math.abs (exp2));
         let i = 0;
-        let align = (exp1 < exp2) ? 1 : 2;
+        let align = (exp1 < exp2) ? 1 : 2;      // Align first operand if its exponent is smaller, else align second operand
         let binToAlign = (exp1 < exp2) ? binaryOp1 : binaryOp2;
         let expToAlign = (exp1 < exp2) ? parseInt (binaryOp1B2) : parseInt (binaryOp2B2);
         let expTarget = (exp1 < exp2) ? parseInt (binaryOp2B2) : parseInt (binaryOp1B2);
@@ -102,22 +102,22 @@ document.addEventListener ("DOMContentLoaded", function () {
     function movePointLeft (binaryString) {
         let decimalIndex = binaryString.indexOf (".");
 
-        if (decimalIndex === -1) {
-            binaryString += ".";
+        if (decimalIndex === -1) {      // If input is just whole number
+            binaryString += ".";        // Add initial binary point
             decimalIndex = binaryString.indexOf (".");
         }
 
-        let wholeBits = binaryString.substring (0, decimalIndex);
-        let fractionBits = binaryString.substring (decimalIndex + 1);
+        let wholeBits = binaryString.substring (0, decimalIndex);           // Get bits after binary point
+        let fractionBits = binaryString.substring (decimalIndex + 1);       // Get bits before binary point
 
-        if (wholeBits.length === 0)
+        if (wholeBits.length === 0)     // If no whole digit, add one leading 0
             wholeBits = "0";
 
-        fractionBits = wholeBits.charAt (wholeBits.length - 1) + fractionBits;
-        wholeBits = wholeBits.substring (0, wholeBits.length - 1) + ".";
-        binaryString = wholeBits + fractionBits;
+        fractionBits = wholeBits.charAt (wholeBits.length - 1) + fractionBits;      // Add LSb of whole bits to fraction bits
+        wholeBits = wholeBits.substring (0, wholeBits.length - 1) + ".";            // Append binary point to next LSb
+        binaryString = wholeBits + fractionBits;        // Combine string
 
-        if (wholeBits.length === 1)
+        if (wholeBits.length === 1)     // If no whole digit (i.e., wholeBits only contains "."), add one leading 0
             binaryString = "0" + binaryString;
 
         return binaryString;
