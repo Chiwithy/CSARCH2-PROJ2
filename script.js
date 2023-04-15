@@ -63,6 +63,11 @@ document.addEventListener ("DOMContentLoaded", function () {
         // Set HTML contents for aligned normalized values
         document.getElementById("binaryOp1Display").innerHTML = `${alignedBinaryOp1} x 2<sup>${alignedBinaryOp1B2}</sup>`;
         document.getElementById("binaryOp2Display").innerHTML = `${alignedBinaryOp2} x 2<sup>${alignedBinaryOp2B2}</sup>`;
+        
+        //sum w/o normalization
+        const sumArray = get_sum(alignedBinaryOp1, alignedBinaryOp2);
+        const outputElement = document.getElementById("output");
+        outputElement.innerHTML = `Sum: ${sumArray.join("")} x 2<sup>${alignedBinaryOp1B2}</sup>`;
     }
 
     function normalize (binaryOp, binaryOpB2) {
@@ -122,4 +127,52 @@ document.addEventListener ("DOMContentLoaded", function () {
 
         return binaryString;
     }
+        function get_sum(normBinaryOp1, normBinaryOp2){
+        let carry = 0;
+        let sumArray = [];
+        while (normBinaryOp1.length < normBinaryOp2.length ) {
+            normBinaryOp1 = normBinaryOp1 + "0";
+        }        
+        while (normBinaryOp2.length < normBinaryOp1.length ) {
+            normBinaryOp2 = normBinaryOp2 + "0";
+        }       
+        for (let i = normBinaryOp1.length; i >= 0; i--) {
+          const binaryDigit1 = normBinaryOp1[i];
+          const binaryDigit2 = normBinaryOp2[i];
+          let sum;
+          if (binaryDigit1 === "1" && binaryDigit2 === "1") {
+            if (carry === 1) {
+              sum = "1";
+            } else {
+              sum = "0";
+            }
+            carry = 1;
+          } else if (binaryDigit1 === "1" || binaryDigit2 === "1") {
+            if (carry === 1) {
+              sum = "0";
+              carry = 1;
+            } else {
+              sum = "1";
+            }
+          }
+          else if(binaryDigit1 === "."){
+              sum=".";
+          } 
+          else {
+            if (carry === 1) {
+              sum = "1";
+              carry = 0;
+            } else {
+              sum = "0";
+            }
+          }
+      
+          sumArray.unshift(sum);
+        }
+      
+        if (carry === 1) {
+          sumArray.unshift("1");
+        }
+        return sumArray;
+      }
 });
