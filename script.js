@@ -43,8 +43,8 @@ document.addEventListener ("DOMContentLoaded", function () {
         }
 
         //Initial Normalization
-        [normBinaryOp1, normBinaryOp1B2] = normalize (binaryOp1, binaryOp1B2);
-        [normBinaryOp2, normBinaryOp2B2] = normalize (binaryOp2, binaryOp2B2);
+        let [normBinaryOp1, normBinaryOp1B2] = normalize (binaryOp1, binaryOp1B2);
+        let [normBinaryOp2, normBinaryOp2B2] = normalize (binaryOp2, binaryOp2B2);
         
         // Set HTML contents for normalized values
         document.getElementById("binaryOp1Display").innerHTML = `${normBinaryOp1} x 2<sup>${normBinaryOp1B2}</sup>`;
@@ -55,21 +55,35 @@ document.addEventListener ("DOMContentLoaded", function () {
         let decimalIndex = binaryOp.indexOf (".");
         let exp = parseInt (binaryOpB2);
         
-        if (decimalIndex === -1) {      //Op1 is a whole number
-            binaryOp += ".";
-            decimalIndex = binaryOp.indexOf (".");
-        }
-        
         while (decimalIndex !== 1) {
-            let wholeBits = binaryOp.substring (0, decimalIndex);
-            let fractionBits = binaryOp.substring (decimalIndex + 1);
-
-            fractionBits = wholeBits.charAt (wholeBits.length - 1) + fractionBits;
-            wholeBits = wholeBits.substring (0, wholeBits.length - 1) + ".";
-            binaryOp = wholeBits + fractionBits;
+            binaryOp = movePointLeft (binaryOp);
             decimalIndex = binaryOp.indexOf (".");
             exp++;
         }
         return [binaryOp, exp.toString ()];
+    }
+
+    function movePointLeft (binaryString) {
+        let decimalIndex = binaryString.indexOf (".");
+
+        if (decimalIndex === -1) {
+            binaryString += ".";
+            decimalIndex = binaryString.indexOf (".");
+        }
+
+        let wholeBits = binaryString.substring (0, decimalIndex);
+        let fractionBits = binaryString.substring (decimalIndex + 1);
+
+        if (wholeBits.length === 0)
+            wholeBits = "0";
+
+        fractionBits = wholeBits.charAt (wholeBits.length - 1) + fractionBits;
+        wholeBits = wholeBits.substring (0, wholeBits.length - 1) + ".";
+        binaryString = wholeBits + fractionBits;
+
+        if (wholeBits.length === 1)
+            binaryString = "0" + binaryString;
+
+        return binaryString;
     }
 });
