@@ -3,13 +3,19 @@ document.addEventListener ("DOMContentLoaded", function () {
     
     function addBinary() {
         // Get the values of the user inputs
-        const binaryOp1 = document.getElementById("binaryOp1").value;
-        const binaryOp1B2 = document.getElementById("binaryOp1B2").value;
-        const binaryOp2 = document.getElementById("binaryOp2").value;
-        const binaryOp2B2 = document.getElementById("binaryOp2B2").value;
+        const binaryOp1 = document.getElementById("binaryOp1").value.trim ();
+        const binaryOp1B2 = document.getElementById("binaryOp1B2").value.trim ();
+        const binaryOp2 = document.getElementById("binaryOp2").value.trim ();
+        const binaryOp2B2 = document.getElementById("binaryOp2B2").value.trim ();
         const roundChoice = document.getElementById("roundChoice").value;
-        const bits = document.getElementById("bits").value;
+        const bits = document.getElementById("bits").value.trim ();
 
+        if (binaryOp1 === "" || binaryOp1B2 === "" ||
+            binaryOp1B2 === "" || binaryOp2B2 === "" ||
+            roundChoice === "" || bits === "") {
+            document.getElementById ("error").textContent = "Input field(s) incomplete.";
+            return;
+        }
         // Set the HTML content of the display elements
         document.getElementById("binaryOp1Display").innerHTML = `${binaryOp1} x 2<sup>${binaryOp1B2}</sup>`;
         document.getElementById("binaryOp2Display").innerHTML = `${binaryOp2} x 2<sup>${binaryOp2B2}</sup>`;
@@ -42,6 +48,7 @@ document.addEventListener ("DOMContentLoaded", function () {
             }
         }
 
+        
         //Initial Normalization
         let [normBinaryOp1, normBinaryOp1B2] = normalize (binaryOp1, binaryOp1B2);
         let [normBinaryOp2, normBinaryOp2B2] = normalize (binaryOp2, binaryOp2B2);
