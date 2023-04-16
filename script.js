@@ -64,10 +64,33 @@ document.addEventListener ("DOMContentLoaded", function () {
         document.getElementById("binaryOp1Display").innerHTML = `${alignedBinaryOp1} x 2<sup>${alignedBinaryOp1B2}</sup>`;
         document.getElementById("binaryOp2Display").innerHTML = `${alignedBinaryOp2} x 2<sup>${alignedBinaryOp2B2}</sup>`;
         
+        let newAlignedBinaryOp1 = [];
+        let newAlignedBinaryOp2 = [];
+
+        if (roundChoice === "grs") {
+            newAlignedBinaryOp1 = addGRS(alignedBinaryOp1, bits);
+            newAlignedBinaryOp2 = addGRS(alignedBinaryOp2, bits);
+        }
+
+        else if (roundChoice === "rounding") {
+            newAlignedBinaryOp1 = rounding(alignedBinaryOp1, bits);
+            newAlignedBinaryOp2 = rounding(alignedBinaryOp2, bits);
+        }
         //sum w/o normalization
-        const sumArray = get_sum(alignedBinaryOp1, alignedBinaryOp2);
+        const sumArray = get_sum(newAlignedBinaryOp1, newAlignedBinaryOp2);
+        
+
+        let finalNotNormalizedBinaryOp = [];
+        if (roundChoice === "grs") {
+            finalNotNormalizedBinaryOp = rounding(sumArray, bits);
+        }
+
+        else if (roundChoice === "rounding") {
+            finalNotNormalizedBinaryOp = sumArray;
+        }
+
         const outputElement = document.getElementById("output");
-        outputElement.innerHTML = `Sum: ${sumArray.join("")} x 2<sup>${alignedBinaryOp1B2}</sup>`;
+        outputElement.innerHTML = `Sum: ${finalNotNormalizedBinaryOp.join("")} x 2<sup>${alignedBinaryOp1B2}</sup>`;
     }
 
     function normalize (binaryOp, binaryOpB2) {
@@ -127,15 +150,18 @@ document.addEventListener ("DOMContentLoaded", function () {
 
         return binaryString;
     }
-        function get_sum(normBinaryOp1, normBinaryOp2){
+
+    function get_sum(normBinaryOp1, normBinaryOp2){
         let carry = 0;
         let sumArray = [];
+
         while (normBinaryOp1.length < normBinaryOp2.length ) {
             normBinaryOp1 = normBinaryOp1 + "0";
         }        
         while (normBinaryOp2.length < normBinaryOp1.length ) {
             normBinaryOp2 = normBinaryOp2 + "0";
         }       
+
         for (let i = normBinaryOp1.length; i >= 0; i--) {
           const binaryDigit1 = normBinaryOp1[i];
           const binaryDigit2 = normBinaryOp2[i];
@@ -174,5 +200,202 @@ document.addEventListener ("DOMContentLoaded", function () {
           sumArray.unshift("1");
         }
         return sumArray;
-      }
+    }
+
+    function addGRS(normBinaryOp, bits) {
+        let bitCounter = 0;
+        let newValue = [];
+        let indexBeforeGRS = 0;
+        
+        let a = 0;
+        while (bitCounter < bits) {
+            const binaryDigit = normBinaryOp[a];
+            if (binaryDigit === ".") {
+                newValue.push(".");
+                indexBeforeGRS++;
+                a++;
+            }
+
+            else if (binaryDigit === "0") {
+                newValue.push("0");
+                bitCounter++;
+                indexBeforeGRS++;
+                a++;
+            }
+
+            else if (binaryDigit === "1") {
+                newValue.push("1");
+                bitCounter++;
+                indexBeforeGRS++;
+                a++;
+            }
+
+            
+        }
+
+        //indexBeforeGRS--;
+
+        let guardBit = normBinaryOp[indexBeforeGRS];
+        let roundBit = normBinaryOp[indexBeforeGRS + 1];
+        let stickyBit = "0";
+            
+        let i = indexBeforeGRS;
+        while (i < normBinaryOp.length) {
+            const binaryDigit = normBinaryOp[i];
+            if (binaryDigit === "1") {
+                stickyBit = "1";
+                break;
+            }
+
+            else if (binaryDigit === "0") {
+                i++;
+                if (i === normBinaryOp.length) {
+                    stickyBit = "0";
+                    break;
+                }
+            }
+
+            else if (binaryDigit === ".") {
+                i++;
+            }
+        }
+
+        newValue.push(guardBit);
+        newValue.push(roundBit);
+        newValue.push(stickyBit);
+
+        return newValue;
+    }
+
+    function rounding(normBinaryOp, bits) {
+        let bitCounter = 0;
+        let trimmedValue = [];
+        let addedValue = [];
+        let removedDigits = [];
+        let roundedValue = [];
+        let indexAfterTrim = 0;
+        let roundUpFlag = false;
+        
+        let a = 0;
+        while (bitCounter < bits) {
+            const binaryDigit = normBinaryOp[a];
+            if (binaryDigit === "1") {
+                trimmedValue.push("1");
+                addedValue.push("0");
+                bitCounter++;
+                indexAfterTrim++;
+                a++;
+            }
+
+            else if (binaryDigit === "0") {
+                trimmedValue.push("0");
+                addedValue.push("0");
+                bitCounter++;
+                indexAfterTrim++;
+                a++;
+            }
+
+            else if (binaryDigit === ".") {
+                trimmedValue.push(".");
+                addedValue.push(".");
+                indexAfterTrim++;
+                a++;
+            }
+        }
+
+        if (bitCounter == bits) {
+            addedValue[addedValue.length - 1] = "1";
+        }
+
+        // indexAfterTrim--;
+        let lastMantissaBit = normBinaryOp[indexAfterTrim - 1];
+        let i = indexAfterTrim;
+        while (i < normBinaryOp.length) {
+            const binaryDigit = normBinaryOp[i];
+            if (binaryDigit === "1") {
+                removedDigits.push("1");
+                i++;
+            }
+
+            else if (binaryDigit === "0") {
+                removedDigits.push("0");
+                i++;
+            }
+
+            else if (binaryDigit === ".") {
+                i++;
+            }
+        }
+
+        if (removedDigits.length === 1) {
+            if (removedDigits[0] === "1") {
+                roundUpFlag = true;
+            }
+
+            else if (removedDigits[0] === "0") {
+                roundUpFlag = false;
+            }
+        }
+
+        else if (removedDigits.length === 2) {
+            if (removedDigits[0] === "0" && removedDigits[1] === "0") {
+                roundUpFlag = false;
+            }
+
+            else if (removedDigits[0] === "0" && removedDigits[1] === "1") {
+                roundUpFlag = false;
+            }
+
+            else if (removedDigits[0] === "1" && removedDigits[1] === "0") {
+                roundUpFlag = true;
+            }
+
+            else if (removedDigits[0] === "1" && removedDigits[1] === "1") {
+                roundUpFlag = false;
+            }
+        }
+        
+        else if (removedDigits.length >= 3) {
+            if (removedDigits[0] == "0") {
+                roundUpFlag = false;
+            }
+
+            else if (removedDigits[0] == "1" && removedDigits[1] == "0" && removedDigits[2] == "0") {
+                if (lastMantissaBit == "0") {
+                    roundUpFlag = false;
+                }
+
+                else if (lastMantissaBit == "1") {
+                    roundUpFlag = true;
+                }
+            }
+
+            else if (removedDigits[0] == "1") {
+                if (removedDigits[1] == "0" && removedDigits[2] == "1") {
+                    roundUpFlag = true;
+                }
+
+                if (removedDigits[1] == "1" && removedDigits[2] == "0") {
+                    roundUpFlag = true;
+                }
+
+                if (removedDigits[1] == "1" && removedDigits[2] == "1") {
+                    roundUpFlag = true;
+                }
+            }
+        }
+
+        if (roundUpFlag === true) {
+            roundedValue = get_sum(trimmedValue, addedValue);
+        }
+
+        else {
+            roundedValue = trimmedValue;
+        }
+
+        
+        
+
+        return roundedValue;
+    }
 });
