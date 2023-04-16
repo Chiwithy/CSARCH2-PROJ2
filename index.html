@@ -6,29 +6,56 @@
 </head>
 
 <body>
+    <div class="title-bar">
+        <h1>Binary-32 Floating point addition calculator</h1>
+    </div>
+    <div class="main-content">
     <input type="text" placeholder="Binary operand 1" id="binaryOp1"> x 2<sup><input type="text" placeholder="Bin 1's Base 2" id="binaryOp1B2" size="10"></sup> +
     <input type="text" placeholder="Binary operand 2" id="binaryOp2"> x 2<sup><input type="text" placeholder="Bin2's Base 2" id="binaryOp2B2" size="10"></sup>
 
     <p>
+        Bit support: <input type="text" placeholder="Number of Bits" id="bits" size="10">
+        <br>
+        <br>
         Rounding choice:
         <select id="roundChoice">
-        <option value="grs">G-R-S</option>
-        <option value="rounding">Rounding</option>
-      </select>
+            <option value="grs">G-R-S</option>
+            <option value="rounding">Rounding</option>
+        </select>
         <br>
-        <br> Bit support: <input type="text" placeholder="Number of Bits" id="bits" size="10">
+        
     </p>
     <button id="addButton">Add Binary</button>
+    <br>
+    <br>
+    <br>
     <p>Binary operand 1: <span id="binaryOp1Display"></span></p>
     <p>Binary operand 2: <span id="binaryOp2Display"></span></p>
     <p>Rounding choice: <span id="roundChoiceDisplay"></span></p>
     <p>Number of Bits: <span id="bitsDisplay"></span></p>
     <p id="output"></p>
     <p id="error"></p>
-    <button id="download">Download Result</button>
-    
-    <script type="text/javascript" src="script.js"></script>
+    <button id="download" disabled>Download Result</button>
+    </div>
+    <div class="sidebar">
+			<p>
+                How it works:
+                <br>
+                1. Input the binary operators, the power of the base-2 exponent, and the desired number of bits in the output.
+                <br>
+                <br>
+                2. Decide on the rounding choice. GRS uses Guard, Round, and Sticky bits, which preserves a fixed number of extra bits, while Rounding uses IEEE-754 Rounding rules.
+                <br>
+                <br>
+                3. Click the add binary button. The page will display the aligned binary operators, the bit display and the answer. If desired, clicking the download result button will download the result in "output.txt"
+                <div class="bottom-text">
+                Final Project output for CSARCH2 S11 by Angel Ancheta, Vincent Avila, and Francis Emmanuel Tamayo
+                </div>
 
+            </p>
+	</div>
+    <script type="text/javascript" src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
 </body>
 
 </html>
