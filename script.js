@@ -95,7 +95,21 @@ document.addEventListener ("DOMContentLoaded", function () {
         const [finalNormalizedBinaryOp, finalNormalizeBinaryOpB2] = normalize (finalNotNormalizedBinaryOp.join (""), alignedBinaryOp1B2);
         outputElement.innerHTML = `Sum: ${finalNormalizedBinaryOp} x 2<sup>${finalNormalizeBinaryOpB2}</sup>`;
     }
-
+    
+    document.getElementById("download").addEventListener("click", downloadOutput);
+    function downloadOutput() {
+      let output = document.getElementById("output").textContent;
+    
+      // Replace "x" followed by a number with "x 2^<number>"
+      output = output.replace(/x\s\d+(\d+)/g, "x 2^$1");
+      const blob = new Blob([output], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "output.txt";
+      link.click();
+    }
+    
     function normalize (binaryOp, binaryOpB2) {
         let decimalIndex = binaryOp.indexOf (".");
         let exp = parseInt (binaryOpB2);
