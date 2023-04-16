@@ -91,6 +91,9 @@ document.addEventListener ("DOMContentLoaded", function () {
 
         const outputElement = document.getElementById("output");
         outputElement.innerHTML = `Sum: ${finalNotNormalizedBinaryOp.join("")} x 2<sup>${alignedBinaryOp1B2}</sup>`;
+
+        const [finalNormalizedBinaryOp, finalNormalizeBinaryOpB2] = normalize (finalNotNormalizedBinaryOp.join (""), alignedBinaryOp1B2);
+        outputElement.innerHTML = `Sum: ${finalNormalizedBinaryOp} x 2<sup>${finalNormalizeBinaryOpB2}</sup>`;
     }
 
     function normalize (binaryOp, binaryOpB2) {
@@ -109,8 +112,6 @@ document.addEventListener ("DOMContentLoaded", function () {
     function alignBits (binaryOp1, binaryOp1B2, binaryOp2, binaryOp2B2) {
         let exp1 = parseInt (binaryOp1B2);
         let exp2 = parseInt (binaryOp2B2);
-        let diff = Math.abs (Math.abs (exp1) - Math.abs (exp2));
-        let i = 0;
         let align = (exp1 < exp2) ? 1 : 2;      // Align first operand if its exponent is smaller, else align second operand
         let binToAlign = (exp1 < exp2) ? binaryOp1 : binaryOp2;
         let expToAlign = (exp1 < exp2) ? parseInt (binaryOp1B2) : parseInt (binaryOp2B2);
