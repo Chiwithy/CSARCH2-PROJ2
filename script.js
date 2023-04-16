@@ -94,6 +94,7 @@ document.addEventListener ("DOMContentLoaded", function () {
 
         const [finalNormalizedBinaryOp, finalNormalizeBinaryOpB2] = normalize (finalNotNormalizedBinaryOp.join (""), alignedBinaryOp1B2);
         outputElement.innerHTML = `Sum: ${finalNormalizedBinaryOp} x 2<sup>${finalNormalizeBinaryOpB2}</sup>`;
+        document.getElementById("download").disabled = false;
     }
     
     document.getElementById("download").addEventListener("click", downloadOutput);
@@ -405,5 +406,13 @@ document.addEventListener ("DOMContentLoaded", function () {
         
 
         return roundedValue;
+    }
+    window.onscroll = function() {
+        var titleBar = document.querySelector('.title-bar');
+        if (window.pageYOffset > 0) {
+            titleBar.classList.add('sticky');
+        } else {
+            titleBar.classList.remove('sticky');
+        }
     }
 });
