@@ -100,7 +100,7 @@ document.addEventListener ("DOMContentLoaded", function () {
     function downloadOutput() {
       let output = document.getElementById("output").textContent;
     
-      // Replace "x" followed by a number with "x 2^<number>"
+      // Replace "x 2" followed by a number with "x 2^<number>"
       output = output.replace(/x\s\d+(\d+)/g, "x 2^$1");
       const blob = new Blob([output], { type: "text/plain;charset=utf-8" });
       const url = URL.createObjectURL(blob);
