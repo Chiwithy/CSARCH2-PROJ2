@@ -77,7 +77,7 @@ document.addEventListener ("DOMContentLoaded", function () {
             newAlignedBinaryOp2 = rounding(alignedBinaryOp2, bits);
         }
         //sum w/o normalization
-        const sumArray = get_sum(newAlignedBinaryOp1, newAlignedBinaryOp2);
+        const sumArray = get_sum(newAlignedBinaryOp1, newAlignedBinaryOp2,bits);
         
 
         let finalNotNormalizedBinaryOp = [];
@@ -151,56 +151,49 @@ document.addEventListener ("DOMContentLoaded", function () {
         return binaryString;
     }
 
-    function get_sum(normBinaryOp1, normBinaryOp2){
-        let carry = 0;
-        let sumArray = [];
+     function get_sum(normBinaryOp1, normBinaryOp2,bits){
+      let carry = 0;
+      let sumArray = [];      
 
-        while (normBinaryOp1.length < normBinaryOp2.length ) {
-            normBinaryOp1 = normBinaryOp1 + "0";
-        }        
-        while (normBinaryOp2.length < normBinaryOp1.length ) {
-            normBinaryOp2 = normBinaryOp2 + "0";
-        }       
-
-        for (let i = normBinaryOp1.length; i >= 0; i--) {
-          const binaryDigit1 = normBinaryOp1[i];
-          const binaryDigit2 = normBinaryOp2[i];
-          let sum;
-          if (binaryDigit1 === "1" && binaryDigit2 === "1") {
-            if (carry === 1) {
-              sum = "1";
-            } else {
-              sum = "0";
-            }
+      for (let i = bits+1; i >= 0; i--) {
+        const binaryDigit1 = normBinaryOp1[i];
+        const binaryDigit2 = normBinaryOp2[i];
+        let sum;
+        if (binaryDigit1 === "1" && binaryDigit2 === "1") {
+          if (carry === 1) {
+            sum = "1";
+          } else {
+            sum = "0";
+          }
+          carry = 1;
+        } else if (binaryDigit1 === "1" || binaryDigit2 === "1") {
+          if (carry === 1) {
+            sum = "0";
             carry = 1;
-          } else if (binaryDigit1 === "1" || binaryDigit2 === "1") {
-            if (carry === 1) {
-              sum = "0";
-              carry = 1;
-            } else {
-              sum = "1";
-            }
+          } else {
+            sum = "1";
           }
-          else if(binaryDigit1 === "."){
-              sum=".";
-          } 
-          else {
-            if (carry === 1) {
-              sum = "1";
-              carry = 0;
-            } else {
-              sum = "0";
-            }
+        }
+        else if(binaryDigit1 === "."){
+            sum=".";
+        } 
+        else {
+          if (carry === 1) {
+            sum = "1";
+            carry = 0;
+          } else {
+            sum = "0";
           }
-      
-          sumArray.unshift(sum);
         }
-      
-        if (carry === 1) {
-          sumArray.unshift("1");
-        }
-        return sumArray;
-    }
+    
+        sumArray.unshift(sum);
+      }
+    
+      if (carry === 1) {
+        sumArray.unshift("1");
+      }
+      return sumArray;
+  }
 
     function addGRS(normBinaryOp, bits) {
         let bitCounter = 0;
