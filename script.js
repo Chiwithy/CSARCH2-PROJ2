@@ -89,11 +89,11 @@ document.addEventListener ("DOMContentLoaded", function () {
             finalNotNormalizedBinaryOp = sumArray;
         }
 
-        const outputElement = document.getElementById("output");
+        const outputElement = document.getElementById("notNormSum");
         outputElement.innerHTML = `Sum: ${finalNotNormalizedBinaryOp.join("")} x 2<sup>${alignedBinaryOp1B2}</sup>`;
 
         const [finalNormalizedBinaryOp, finalNormalizeBinaryOpB2] = normalize (finalNotNormalizedBinaryOp.join (""), alignedBinaryOp1B2);
-        outputElement.innerHTML = `Sum: ${finalNormalizedBinaryOp} x 2<sup>${finalNormalizeBinaryOpB2}</sup>`;
+        document.getElementById ("finalNormSum").innerHTML = `Sum: ${finalNormalizedBinaryOp} x 2<sup>${finalNormalizeBinaryOpB2}</sup>`;
         document.getElementById("download").disabled = false;
     }
     
