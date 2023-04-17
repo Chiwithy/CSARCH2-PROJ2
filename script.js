@@ -215,9 +215,10 @@ document.addEventListener ("DOMContentLoaded", function () {
         let bitCounter = 0;
         let newValue = [];
         let indexBeforeGRS = 0;
+        let grsCtr = 0;
         
         let a = 0;
-        while (bitCounter < bits) {
+        while (bitCounter < bits && grsCtr < 50) {
             const binaryDigit = normBinaryOp[a];
             if (binaryDigit === ".") {
                 newValue.push(".");
@@ -238,6 +239,7 @@ document.addEventListener ("DOMContentLoaded", function () {
                 indexBeforeGRS++;
                 a++;
             }
+            grsCtr++;
 
             
         }
@@ -284,9 +286,10 @@ document.addEventListener ("DOMContentLoaded", function () {
         let roundedValue = [];
         let indexAfterTrim = 0;
         let roundUpFlag = false;
+        let roundCtr = 0;
         
         let a = 0;
-        while (bitCounter < bits) {
+        while (bitCounter < bits && roundCtr < 50) {
             const binaryDigit = normBinaryOp[a];
             if (binaryDigit === "1") {
                 trimmedValue.push("1");
@@ -310,6 +313,8 @@ document.addEventListener ("DOMContentLoaded", function () {
                 indexAfterTrim++;
                 a++;
             }
+
+            roundCtr++;
         }
 
         if (bitCounter == bits) {
@@ -402,10 +407,11 @@ document.addEventListener ("DOMContentLoaded", function () {
             roundedValue = trimmedValue;
         }
 
-        
-        
-
         return roundedValue;
+    }
+
+    function countBits (binaryOp) {
+        return binaryOp.length - 1;
     }
     window.onscroll = function() {
         var titleBar = document.querySelector('.title-bar');
